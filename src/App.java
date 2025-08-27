@@ -5,6 +5,7 @@ import java.util.Scanner;
 public class App {
     public static void main(String[] args) throws Exception {
         Scanner scanner = new Scanner(System.in);
+        Kundenverwaltung verwaltung = new Kundenverwaltung();
 
         // Shop Produkte Liste
         List<Produkt> shopProdukteListe = new ArrayList<>();
@@ -13,8 +14,13 @@ public class App {
         shopProdukteListe.add(new Produkt("Milch", 1.20));
 
         // Warnkorb laden
-        Warenkorb warenkorb = Warenkorb.laden("warenkorb.ser");
+        //Warenkorb warenkorb = Warenkorb.laden("warenkorb.ser");
 
+        System.out.println("Willkommen im Mini-Shop!");
+        System.out.print("Bitte Benutzername eingeben: ");
+        String name = scanner.nextLine();
+
+        Kunde aktuallerKunde = verwaltung.einloggenOderRegistrieren(name);
 
         int wahl;
         do{
@@ -22,7 +28,7 @@ public class App {
             System.out.println("1. Produkte anzeigen");
             System.out.println("2. Produkt in den Warenkorb legen");
             System.out.println("3. Warenkorb anzeigen");
-            System.out.println("4. Warenkorb speichern");
+            System.out.println("4. Warenkorb speichern & Beenden");
             System.out.println("0. Beenden");
             System.out.print("Deine Wahl: ");
 
@@ -45,21 +51,26 @@ public class App {
                         double rabatt = Double.parseDouble(scanner.nextLine()) /100.0;
                         System.out.println("Status eingeben()rb. resreviert /gekauft: ");
                         String status = scanner.nextLine();
-                        warenkorb.hinzufügen(shopProdukteListe.get(index), menge, rabatt, status);
+                        aktuallerKunde.getWarenkorb().hinzufügen(shopProdukteListe.get(index), menge, rabatt, status);
+                        System.out.println("Hinzugefügt!");
+                        //warenkorb.hinzufügen(shopProdukteListe.get(index), menge, rabatt, status);
                     }
                     else{
                         System.out.println("Ungültige Auswahl.");
                     }
                     break;
                 case 3:
-                    warenkorb.anzeigen();
+                    //warenkorb.anzeigen();
+                    aktuallerKunde.getWarenkorb().anzeigen();
                     break;
                 case 4:
-                    warenkorb.speichern("warenkorb.ser");
+                    //warenkorb.speichern("warenkorb.ser");
+                    verwaltung.speichern();
+                    System.out.println("Gespeichert, Auf wiedersehen, " + aktuallerKunde.getBenutzername()+ "!");
                     break;
                 case 0:
                     System.out.println("Programm beendet. Vielen Dank für den Einkauf!");
-                    warenkorb.speichern("warenkorb.ser");
+                    //warenkorb.speichern("warenkorb.ser");
                     break;
 
                 default:
@@ -68,7 +79,7 @@ public class App {
             }
 
 
-        }while (wahl != 0);
+        }while (wahl != 0 && wahl != 4);
 
         scanner.close();
     }
